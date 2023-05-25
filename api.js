@@ -1,3 +1,4 @@
+import JWT from "jsonwebtoken";
 import { once } from "node:events";
 import { createServer } from "node:http";
 
@@ -5,6 +6,8 @@ const validUser = {
   user: "juliano",
   password: "123",
 };
+
+const JWT_KEY = 'abc123'
 
 async function loginRoute(req, res) {
   const { user, password } = JSON.parse(await once(req, "data"));
@@ -16,7 +19,9 @@ async function loginRoute(req, res) {
     return;
   }
 
-  res.end("ok");
+  const token = JWT.sign({ user, message: ':)' }, JWT_KEY)
+
+  res.end(JSON.stringify({ token }));
 }
 
 async function handler(req, res) {
